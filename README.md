@@ -50,26 +50,6 @@ Docker Deployment
     # View application logs
     npm run docker:logs
 
-Available Commands
-------------------
-
-Launch in Docker
-
-    npm run docker:up
-
-Stop Docker containers
-
-    npm run docker:down
-
-Rebuild Docker environment
-
-    npm run docker:reset
-
-View application logs
-
-    npm run docker:logs
-
-
 
 Health check
 -------------
