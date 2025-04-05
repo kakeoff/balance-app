@@ -40,42 +40,34 @@ Docker Deployment
 
     # Start containers
     npm run docker:up
+
     # Stop containers
     npm run docker:down
+
     # Full rebuild (with volume cleanup)
     npm run docker:reset
+
     # View application logs
     npm run docker:logs
 
 Available Commands
 ------------------
-Build project
-
-`npm run build`
-
-Start production server
-
-`npm run start`
-
-Start dev server
-
-`npm run dev`
 
 Launch in Docker
 
-`npm run docker:up`
+    npm run docker:up
 
 Stop Docker containers
 
-`npm run docker:down`
+    npm run docker:down
 
 Rebuild Docker environment
 
-`npm run docker:reset`
+    npm run docker:reset
 
 View application logs
 
-`npm run docker:logs`
+    npm run docker:logs
 
 
 
