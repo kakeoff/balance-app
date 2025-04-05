@@ -16,8 +16,9 @@ export const sequelize = new Sequelize({
 
 export const umzug = new Umzug({
   migrations: {
-    glob: "src/migrations/*.ts",
+    glob: "dist/migrations/*.js",
     resolve: ({ name, path, context }) => {
+      delete require.cache[require.resolve(path!)];
       const migration = require(path!);
       return {
         name,

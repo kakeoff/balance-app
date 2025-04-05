@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp -r src/migrations dist/",
     "start": "node dist/server.js",
-    "dev": "ts-node-dev src/server.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
-    "docker:reset": "docker compose down -v && docker-compose up -d"
-  },
+    "docker:reset": "docker compose down -v && docker compose up -d --build",
+    "docker:logs": "docker compose logs -f app"
+    },
   "keywords": [],
   "author": "",
   "license": "ISC",
