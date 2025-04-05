@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres:13-alpine
+    container_name: balance_db
+    environment:
+      POSTGRES_USER: balance_user
+      POSTGRES_PASSWORD: balance_password
+      POSTGRES_DB: balance_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U balance_user -d balance_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+
+  app:
+    build: .
+    container_name: balance_app
+    ports:
+      - "3001:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: balance_user
+      DB_PASSWORD: balance_password
+      DB_NAME: balance_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+
+volumes:
+  postgres_data:
