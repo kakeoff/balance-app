@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "balance_user",
+    "password": "balance_password",
+    "database": "balance_db",
+    "host": "postgres",
+    "dialect": "postgres"
+  }
+} 

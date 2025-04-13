@@ -1,5 +1,5 @@
-import { ErrorRequestHandler } from 'express';
-import { ApiError } from '../utils/apiError';
+import { ErrorRequestHandler } from "express";
+import { ApiError } from "../utils/apiError";
 
 export const errorHandler: ErrorRequestHandler = (
   err: unknown,
@@ -17,17 +17,17 @@ export const errorHandler: ErrorRequestHandler = (
   }
 
   if (err instanceof Error) {
-    console.error('Unhandled error:', err);
+    console.error("Unhandled error:", err);
     res.status(500).json({
       success: false,
-      message: err.message || 'Internal server error',
+      message: err.message || "Internal server error",
     });
     return;
   }
 
-  console.error('Unknown error:', err);
+  console.error("Unknown error:", err);
   res.status(500).json({
     success: false,
-    message: 'Internal server error',
+    message: "Internal server error",
   });
 };

@@ -1,17 +1,24 @@
 {
   "name": "balance-app",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Balance application with multiple instances",
+  "main": "dist/server.js",
   "scripts": {
-    "build": "tsc && cp -r src/migrations dist/",
+    "build": "tsc",
     "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "test": "jest",
+    "migrate": "ts-node src/scripts/run-migrations.ts",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:reset": "docker compose down -v && docker compose up -d --build",
-    "docker:logs": "docker compose logs -f app"
-    },
+    "docker:logs": "docker compose logs -f",
+    "docker:logs:app1": "docker compose logs -f app1",
+    "docker:logs:app2": "docker compose logs -f app2",
+    "docker:logs:app3": "docker compose logs -f app3",
+    "docker:logs:app4": "docker compose logs -f app4",
+    "docker:logs:app5": "docker compose logs -f app5"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -26,11 +33,13 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "@types/node-cron": "^3.0.11",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "express-validator": "^7.2.1",
     "morgan": "^1.10.0",
+    "node-cron": "^3.0.3",
     "pg": "^8.14.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",

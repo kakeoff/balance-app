@@ -1,8 +1,8 @@
-import { DataTypes, QueryInterface } from 'sequelize';
+import { DataTypes, QueryInterface } from "sequelize";
 
-module.exports = {
-  up: async (queryInterface: QueryInterface) => {
-    await queryInterface.createTable('users', {
+export async function up(queryInterface: QueryInterface): Promise<void> {
+  try {
+    await queryInterface.createTable("users", {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -23,14 +23,24 @@ module.exports = {
       },
     });
 
-    await queryInterface.bulkInsert('users', [{
-      balance: 10000,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }]);
-  },
+    await queryInterface.bulkInsert("users", [
+      {
+        balance: 10000,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
+  } catch (error) {
+    console.error("Migration error:", error);
+    throw error;
+  }
+}
 
-  down: async (queryInterface: QueryInterface) => {
-    await queryInterface.dropTable('users');
-  },
-};
+export async function down(queryInterface: QueryInterface): Promise<void> {
+  try {
+    await queryInterface.dropTable("users");
+  } catch (error) {
+    console.error("Migration rollback error:", error);
+    throw error;
+  }
+}
