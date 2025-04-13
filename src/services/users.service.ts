@@ -12,7 +12,7 @@ class UsersService {
       throw new ApiError(400, "Amount cannot be zero");
     }
 
-    const [affectedRows] = await User.update(
+    const [affectedRows, [updatedUser]] = await User.update(
       {
         balance: sequelize.literal(`balance + ${amount}`),
       },
@@ -23,21 +23,17 @@ class UsersService {
             balance: { [Op.gte]: Math.abs(amount) },
           }),
         },
+        returning: true,
       }
     );
 
     if (affectedRows === 0) {
       throw amount < 0
-        ? new ApiError(400, "Insufficient funds")
+        ? new ApiError(400, "Insufficient funds or user not found")
         : new ApiError(404, "User not found");
     }
 
-    const user = await User.findByPk(userId);
-    if (!user) {
-      throw new ApiError(404, "User not found after update");
-    }
-
-    return user;
+    return updatedUser;
   }
 }
 
