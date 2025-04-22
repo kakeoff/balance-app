@@ -27,9 +27,26 @@ services:
     depends_on:
       - postgres
 
+  migrations:
+    build:
+      context: .
+      dockerfile: Dockerfile.migrations
+    container_name: balance_migrations
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=balance_user
+      - DB_PASSWORD=balance_password
+      - DB_NAME=balance_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
   app1:
     build: .
-    command: sh -c "npm run migrate && npm start"
+    command: npm start
     container_name: balance_app_1
     ports:
       - "3001:3001"
@@ -42,15 +59,14 @@ services:
       - DB_PASSWORD=balance_password
       - DB_NAME=balance_db
     depends_on:
-      postgres:
-        condition: service_healthy
+      - migrations
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
 
   app2:
     build: .
-    command: sh -c "npm run migrate && npm start"
+    command: npm start
     container_name: balance_app_2
     ports:
       - "3002:3002"
@@ -63,15 +79,14 @@ services:
       - DB_PASSWORD=balance_password
       - DB_NAME=balance_db
     depends_on:
-      postgres:
-        condition: service_healthy
+      - migrations
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
 
   app3:
     build: .
-    command: sh -c "npm run migrate && npm start"
+    command: npm start
     container_name: balance_app_3
     ports:
       - "3003:3003"
@@ -84,15 +99,14 @@ services:
       - DB_PASSWORD=balance_password
       - DB_NAME=balance_db
     depends_on:
-      postgres:
-        condition: service_healthy
+      - migrations
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
 
   app4:
     build: .
-    command: sh -c "npm run migrate && npm start"
+    command: npm start
     container_name: balance_app_4
     ports:
       - "3004:3004"
@@ -105,15 +119,14 @@ services:
       - DB_PASSWORD=balance_password
       - DB_NAME=balance_db
     depends_on:
-      postgres:
-        condition: service_healthy
+      - migrations
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
 
   app5:
     build: .
-    command: sh -c "npm run migrate && npm start"
+    command: npm start
     container_name: balance_app_5
     ports:
       - "3005:3005"
@@ -126,8 +139,7 @@ services:
       - DB_PASSWORD=balance_password
       - DB_NAME=balance_db
     depends_on:
-      postgres:
-        condition: service_healthy
+      - migrations
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules

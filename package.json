@@ -9,6 +9,10 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "test": "jest",
     "migrate": "ts-node src/scripts/run-migrations.ts",
+    "migrate:up": "ts-node src/scripts/run-migrations.ts up",
+    "migrate:down": "ts-node src/scripts/run-migrations.ts down",
+    "migrate:pending": "ts-node src/scripts/run-migrations.ts pending",
+    "migrate:executed": "ts-node src/scripts/run-migrations.ts executed",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:reset": "docker compose down -v && docker compose up -d --build",
@@ -17,7 +21,8 @@
     "docker:logs:app2": "docker compose logs -f app2",
     "docker:logs:app3": "docker compose logs -f app3",
     "docker:logs:app4": "docker compose logs -f app4",
-    "docker:logs:app5": "docker compose logs -f app5"
+    "docker:logs:app5": "docker compose logs -f app5",
+    "docker:logs:migrations": "docker compose logs -f migrations"
   },
   "keywords": [],
   "author": "",

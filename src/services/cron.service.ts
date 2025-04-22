@@ -65,6 +65,12 @@ export class CronService {
     if (this.isInitialized) {
       return;
     }
+
+    const serverPosition = this.getServerPosition();
+    console.log(
+      `Server ID: ${SERVER_ID}, Position: ${serverPosition}, Port: ${process.env.PORT}`
+    );
+
     await this.createDefaultJobs();
     await this.startAllJobs();
     this.isInitialized = true;
@@ -134,11 +140,20 @@ export class CronService {
       },
     ];
 
-    for (const job of defaultJobs) {
-      const existingJob = await CronJob.findOne({ where: { name: job.name } });
-      if (!existingJob) {
-        await CronJob.create(job);
+    try {
+      const existingJobsCount = await CronJob.count();
+
+      if (existingJobsCount === 0) {
+        console.log("Creating default cron jobs...");
+        await CronJob.bulkCreate(defaultJobs);
+        console.log(`Created ${defaultJobs.length} default cron jobs`);
+      } else {
+        console.log(
+          `Found ${existingJobsCount} existing cron jobs, skipping creation`
+        );
       }
+    } catch (error) {
+      console.error("Error in createDefaultJobs:", error);
     }
   }
 
@@ -147,12 +162,20 @@ export class CronService {
       const jobs = await CronJob.findAll({
         where: { isActive: true },
       });
-      const serverPosition = this.getServerPosition(jobs.length);
+
+      const serverPosition = this.getServerPosition();
+
+      console.log(`Starting jobs for server position ${serverPosition}...`);
+
+      let scheduledCount = 0;
       for (const job of jobs) {
         if (jobs.indexOf(job) % 5 === serverPosition) {
           await this.startJob(job);
+          scheduledCount++;
         }
       }
+
+      console.log(`Scheduled ${scheduledCount} jobs on this server instance`);
     } catch (error) {
       console.error("Error starting jobs:", error);
     }
@@ -183,6 +206,7 @@ export class CronService {
   private async startJob(job: CronJob): Promise<void> {
     try {
       this.stopJob(job.id);
+      console.log(`Starting job: ${job.name} (${job.interval})`);
       const task = cron.schedule(job.interval, async () => {
         await this.runJob(job);
       });
@@ -202,10 +226,11 @@ export class CronService {
     }
   }
 
-  private getServerPosition(totalJobs: number): number {
+  private getServerPosition(): number {
     const port = process.env.PORT || "3000";
     const portNumber = parseInt(port, 10);
-    return (portNumber - 3000) % 5;
+
+    return (portNumber % 10) - 1;
   }
 
   private async runJob(job: CronJob): Promise<void> {

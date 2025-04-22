@@ -42,10 +42,6 @@ CronJobExecution.init(
     cronJobId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: CronJob,
-        key: "id",
-      },
     },
     startedAt: {
       type: DataTypes.DATE,
@@ -80,8 +76,16 @@ CronJobExecution.init(
   {
     sequelize,
     tableName: "cron_job_executions",
+    timestamps: true,
   }
 );
 
-CronJob.hasMany(CronJobExecution, { foreignKey: "cronJobId" });
-CronJobExecution.belongsTo(CronJob, { foreignKey: "cronJobId" });
+CronJob.hasMany(CronJobExecution, {
+  foreignKey: "cronJobId",
+  constraints: false,
+});
+
+CronJobExecution.belongsTo(CronJob, {
+  foreignKey: "cronJobId",
+  constraints: false,
+});
